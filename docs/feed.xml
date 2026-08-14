@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>Cain — Devblog</title>
+  <link>/</link>
+  <description>Development log for Cain — a 2D action-platformer with deliberate, stamina-based combat and a hand-painted, organic world.</description>
+  <language>en</language>
+  <item>
+    <title>Reading the forest</title>
+    <link>/posts/reading-the-forest.html</link>
+    <guid isPermaLink="false">cain-2026-08-02-reading-the-forest</guid>
+    <pubDate>Sun, 02 Aug 2026 12:00:00 GMT</pubDate>
+    <description>Locking down what The Wake is actually about — a region where you cannot trust what you're looking at until you've learned how to look.</description>
+  </item>
+  <item>
+    <title>The world looked pixel'y</title>
+    <link>/posts/the-world-looked-pixely.html</link>
+    <guid isPermaLink="false">cain-2026-06-26-the-world-looked-pixely</guid>
+    <pubDate>Fri, 26 Jun 2026 12:00:00 GMT</pubDate>
+    <description>Two complaints about the Nod opening — chunky uneven pixels, and background layers with no shape of their own. Three changes, each independently revertable.</description>
+  </item>
+  <item>
+    <title>Nine rooms west</title>
+    <link>/posts/nine-rooms-west.html</link>
+    <guid isPermaLink="false">cain-2026-06-06-nine-rooms-west</guid>
+    <pubDate>Sat, 06 Jun 2026 12:00:00 GMT</pubDate>
+    <description>Planning Nod, the opening region — flat, quiet, sparse, and deliberately not a combat area.</description>
+  </item>
+</channel>
+</rss>

@@ -1,0 +1,15 @@
+{
+  "name": "cain-devblog",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Devblog for Cain. Zero dependencies by design — node build.mjs is the whole toolchain.",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --serve",
+    "new": "node build.mjs --new"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

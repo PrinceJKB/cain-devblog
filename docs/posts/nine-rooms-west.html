@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nine rooms west — Cain</title>
+<meta name="description" content="Planning Nod, the opening region — flat, quiet, sparse, and deliberately not a combat area.">
+<meta property="og:title" content="Nine rooms west — Cain">
+<meta property="og:description" content="Planning Nod, the opening region — flat, quiet, sparse, and deliberately not a combat area.">
+<meta property="og:type" content="website">
+<link rel="alternate" type="application/rss+xml" title="Cain devblog" href="../feed.xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body class="page-post">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <a class="brand" href="../index.html">
+    <span class="brand-mark">Cain</span>
+    <span class="brand-sub">Devblog</span>
+  </a>
+  <nav class="site-nav">
+    <a href="../index.html">Archive</a>
+    <a href="../feed.xml">RSS</a>
+  </nav>
+</header>
+<main id="main">
+<article class="post">
+  <header class="post-head">
+    <p class="crumb"><a href="../index.html">&larr; All entries</a></p>
+    <h1>Nine rooms west</h1>
+    <p class="post-meta">
+      <time datetime="2026-06-06">6 June 2026</time>
+      <span class="post-tags"><span class="tag tag-design">design</span><span class="tag tag-lore">lore</span></span>
+    </p>
+  </header>
+  <nav class="toc" aria-label="On this page">
+  <p class="toc-label">On this page</p>
+  <ol><li><a href="#the-chain">The chain</a></li><li><a href="#the-hollow-is-the-whole-tutorial">The hollow is the whole tutorial</a></li><li><a href="#dials-i-already-know-are-wrong">Dials I already know are wrong</a></li><li><a href="#the-locked-door">The locked door</a></li></ol>
+</nav>
+  <div class="prose">
+<p>Nod is the first thing anyone will play, and I've been putting off building it properly because
+the placeholder chain works well enough to walk through. That's exactly why it needed a plan on
+paper before I touch it again.</p>
+<p>The brief is four words: <strong>flat, quiet, sparse, heavy.</strong> Long sightlines, wind, footsteps. A five
+to eight minute walk westward. <span class="badge badge-proposed">PROPOSED</span> as a region that contains a grand total of one enemy.</p>
+<h2 id="the-chain">The chain</h2>
+<p>Nine rooms, east to west. Every run starts at Cain's shack and ends at the monument.</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">#</th><th style="text-align:left">Room</th><th style="text-align:left">Beat</th></tr></thead><tbody><tr><td style="text-align:left">1</td><td style="text-align:left"><strong>CainsShackRoom</strong></td><td style="text-align:left">Where every run begins. The shack landmark is done.</td></tr><tr><td style="text-align:left">2</td><td style="text-align:left">NodFields_A</td><td style="text-align:left">First step outside. The longest sightline I can give it. No enemies.</td></tr><tr><td style="text-align:left">3</td><td style="text-align:left">NodWretchHollow</td><td style="text-align:left">The Lone Wretch. A shallow, readable depression — the tutorial arena.</td></tr><tr><td style="text-align:left">4</td><td style="text-align:left">NodFields_B</td><td style="text-align:left">Emptiness after violence. Wind and one ruined fence-line.</td></tr><tr><td style="text-align:left">5</td><td style="text-align:left">NodOldField</td><td style="text-align:left">Something was worked here once. A half-sunk well or foundation.</td></tr><tr><td style="text-align:left">6</td><td style="text-align:left">NodRise</td><td style="text-align:left">The one elevation in Nod. From the crest, the monument owns the skyline.</td></tr><tr><td style="text-align:left">7</td><td style="text-align:left">NodQuiet</td><td style="text-align:left">The oldest, emptiest place. Sparser than Fields_B.</td></tr><tr><td style="text-align:left">8</td><td style="text-align:left">NodApproach</td><td style="text-align:left">Old stones thicken westward. The ground rises toward it.</td></tr><tr><td style="text-align:left">9</td><td style="text-align:left"><strong>NodMonument</strong></td><td style="text-align:left">Cain's Monument. The largest cairn in the game, built over millennia.</td></tr></tbody></table></div>
+<p>The current region asset already has the nine nodes wired in the right order, but it's built from
+three placeholder rooms repeated. The plan is to replace them one at a time, east to west, keeping
+the door wiring intact and just swapping each node's room reference as the real one is ready. That
+way the region is always walkable, and I never have a week where the game doesn't run.</p>
+<h2 id="the-hollow-is-the-whole-tutorial">The hollow is the whole tutorial</h2>
+<p>Room 3 is the only room with an enemy in it, and it's doing a lot of work. A shallow depression,
+three or four tiles deep, with a wide flat floor and one leaning dead tree on the lip so you can
+read it from a room away.</p>
+<p>The important part is that <strong>the rim is skirtable.</strong> A new player drops in and fights. A veteran on
+their fortieth run walks straight past along the edge in about four seconds. I don't want a tutorial
+that taxes people who already know the game — the hollow teaches by being optional.</p>
+<h2 id="dials-i-already-know-are-wrong">Dials I already know are wrong</h2>
+<p>Two things are set for a region that Nod isn't:</p>
+<ul><li><strong>Mist density is 0.62.</strong> That reads as heavy, and Nod is supposed to read as <em>quiet</em>. Dropping<p>toward 0.4 with wind influence at 1 so the wind is actually visible in it.</p></li><li><strong>Foreground occluders need to go to near zero.</strong> Occluders fight long sightlines, and the long<p>sightline is the entire point of the region.</p></li></ul>
+<p>Trees should be rare, dry grass everywhere, and the distant treeline band kept low — Nod's horizon
+should be mostly empty sky.</p>
+<h2 id="the-locked-door">The locked door</h2>
+<p>The west door out of NodMonument is locked, and stays locked until region transitions exist. Which
+means for now the opening region ends by walking up to the biggest object in the game and not being
+able to go past it.</p>
+<p>I'm not sure yet whether that's frustrating or exactly right.</p>
+  </div>
+</article>
+<nav class="post-nav">
+  <span></span>
+  <a class="nav-next" href="the-world-looked-pixely.html"><span>Next</span><strong>The world looked pixel'y</strong></a>
+</nav>
+</main>
+<footer class="site-foot">
+  <p>Cain is in active development. Everything here is subject to change — that is rather the point.</p>
+</footer>
+</body>
+</html>

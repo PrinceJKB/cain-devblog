@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cain — Devblog</title>
+<meta name="description" content="Development log for Cain — a 2D action-platformer with deliberate, stamina-based combat and a hand-painted, organic world.">
+<meta property="og:title" content="Cain — Devblog">
+<meta property="og:description" content="Development log for Cain — a 2D action-platformer with deliberate, stamina-based combat and a hand-painted, organic world.">
+<meta property="og:type" content="website">
+<link rel="alternate" type="application/rss+xml" title="Cain devblog" href="feed.xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="page-index">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <a class="brand" href="index.html">
+    <span class="brand-mark">Cain</span>
+    <span class="brand-sub">Devblog</span>
+  </a>
+  <nav class="site-nav">
+    <a href="index.html">Archive</a>
+    <a href="feed.xml">RSS</a>
+  </nav>
+</header>
+<main id="main">
+<div class="hero">
+  <h1>Building <em>Cain</em></h1>
+  <p class="lede">Development log for Cain — a 2D action-platformer with deliberate, stamina-based combat and a hand-painted, organic world.</p>
+  <p class="hero-meta">3 entries &middot; latest 2 August 2026</p>
+</div>
+<div class="filters" role="group" aria-label="Filter posts by tag">
+  <button class="filter is-on" data-tag="*">All</button>
+  <button class="filter" data-tag="changelog">changelog</button>
+  <button class="filter" data-tag="design">design</button>
+  <button class="filter" data-tag="lore">lore</button>
+  <button class="filter" data-tag="art">art</button>
+  <button class="filter" data-tag="tech">tech</button>
+</div>
+<div class="archive">
+<section class="month" data-month="2026-08">
+  <h2 class="month-label">August 2026</h2>
+  <ol class="posts">
+    <li class="post-row" data-tags="design lore">
+      <a class="post-link" href="posts/reading-the-forest.html">
+        <time class="post-date" datetime="2026-08-02">02 Aug</time>
+        <span class="post-body">
+          <span class="post-title">Reading the forest</span>
+          <span class="post-excerpt">Locking down what The Wake is actually about — a region where you cannot trust what you're looking at until you've learned how to look.</span>
+          <span class="post-tags"><span class="tag tag-design">design</span><span class="tag tag-lore">lore</span></span>
+        </span>
+      </a>
+    </li>
+  </ol>
+</section>
+<section class="month" data-month="2026-06">
+  <h2 class="month-label">June 2026</h2>
+  <ol class="posts">
+    <li class="post-row" data-tags="changelog art tech">
+      <a class="post-link" href="posts/the-world-looked-pixely.html">
+        <time class="post-date" datetime="2026-06-26">26 Jun</time>
+        <span class="post-body">
+          <span class="post-title">The world looked pixel'y</span>
+          <span class="post-excerpt">Two complaints about the Nod opening — chunky uneven pixels, and background layers with no shape of their own. Three changes, each independently revertable.</span>
+          <span class="post-tags"><span class="tag tag-changelog">changelog</span><span class="tag tag-art">art</span><span class="tag tag-tech">tech</span></span>
+        </span>
+      </a>
+    </li>
+    <li class="post-row" data-tags="design lore">
+      <a class="post-link" href="posts/nine-rooms-west.html">
+        <time class="post-date" datetime="2026-06-06">06 Jun</time>
+        <span class="post-body">
+          <span class="post-title">Nine rooms west</span>
+          <span class="post-excerpt">Planning Nod, the opening region — flat, quiet, sparse, and deliberately not a combat area.</span>
+          <span class="post-tags"><span class="tag tag-design">design</span><span class="tag tag-lore">lore</span></span>
+        </span>
+      </a>
+    </li>
+  </ol>
+</section>
+</div>
+<p class="no-results" hidden>Nothing tagged that yet.</p>
+<script>
+(() => {
+  const buttons = [...document.querySelectorAll('.filter')];
+  const rows = [...document.querySelectorAll('.post-row')];
+  const months = [...document.querySelectorAll('.month')];
+  const none = document.querySelector('.no-results');
+  buttons.forEach(b => b.addEventListener('click', () => {
+    const tag = b.dataset.tag;
+    buttons.forEach(x => x.classList.toggle('is-on', x === b));
+    let shown = 0;
+    rows.forEach(r => {
+      const ok = tag === '*' || r.dataset.tags.split(' ').includes(tag);
+      r.hidden = !ok;
+      if (ok) shown++;
+    });
+    months.forEach(m => {
+      m.hidden = ![...m.querySelectorAll('.post-row')].some(r => !r.hidden);
+    });
+    none.hidden = shown > 0;
+  }));
+})();
+</script>
+</main>
+<footer class="site-foot">
+  <p>Cain is in active development. Everything here is subject to change — that is rather the point.</p>
+</footer>
+</body>
+</html>
