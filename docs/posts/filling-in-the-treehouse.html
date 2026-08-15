@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Filling in the treehouse — Cain</title>
+<meta name="description" content="Five new treehouse rooms, and the two bake bugs that turned up once the interiors were properly filled in.">
+<meta property="og:title" content="Filling in the treehouse — Cain">
+<meta property="og:description" content="Five new treehouse rooms, and the two bake bugs that turned up once the interiors were properly filled in.">
+<meta property="og:type" content="website">
+<link rel="alternate" type="application/rss+xml" title="Cain devblog" href="../feed.xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body class="page-post">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <a class="brand" href="../index.html">
+    <span class="brand-mark">Cain</span>
+    <span class="brand-sub">Devblog</span>
+  </a>
+  <nav class="site-nav">
+    <a href="../index.html">Archive</a>
+    <a href="../feed.xml">RSS</a>
+  </nav>
+</header>
+<main id="main">
+<article class="post">
+  <header class="post-head">
+    <p class="crumb"><a href="../index.html">&larr; All entries</a></p>
+    <h1>Filling in the treehouse</h1>
+    <p class="post-meta">
+      <time datetime="2026-08-15">15 August 2026</time>
+      <span class="post-tags"><span class="tag tag-tech">tech</span><span class="tag tag-design">design</span></span>
+    </p>
+  </header>
+  <nav class="toc" aria-label="On this page">
+  <p class="toc-label">On this page</p>
+  <ol><li><a href="#the-rooms-baked-black">The rooms baked black</a></li><li><a href="#nothing-under-the-rooms">Nothing under the rooms</a></li><li><a href="#windows">Windows</a></li><li><a href="#still-open">Still open</a></li></ol>
+</nav>
+  <div class="prose">
+<p>The treehouse now runs from the ladder room out to both ends. Five new rooms: the workshop, the
+tally, a west span, the post, and Vassen's quarters. I also repainted the five older rooms, because
+they were mostly empty inside and the new ones weren't.</p>
+<p>The old rooms were 30-50% filled. The new ones are 90-98%. Filling them in broke two things in the
+bake pipeline, and both had the same cause: the pipeline treats painted scenery as if it were solid
+ground.</p>
+<h2 id="the-rooms-baked-black">The rooms baked black</h2>
+<p>The higher rooms came out completely black. The props inside them were lit correctly, which is what
+pointed at the cause — the darkness was baked into the albedo, so lighting couldn't undo it.</p>
+<p>The depth-darken pass exists to make the inside of a rock mass dark. Anything more than 2.5 tiles
+from open air bakes to the darkest palette colour. The problem is that it measures that distance
+using every solid cell, including background scenery. Scenery is a wall painted behind the room, not
+rock, and Cain walks straight through it. So a room that is 98% scenery measured as almost completely
+buried.</p>
+<p>The fix was to count only collidable cells as mass.</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">room</th><th style="text-align:left">black pixels before</th><th style="text-align:left">after</th></tr></thead><tbody><tr><td style="text-align:left">Catchment</td><td style="text-align:left">85%</td><td style="text-align:left">14%</td></tr><tr><td style="text-align:left">Larder</td><td style="text-align:left">95%</td><td style="text-align:left">10%</td></tr><tr><td style="text-align:left">Workshop</td><td style="text-align:left">92%</td><td style="text-align:left">17%</td></tr><tr><td style="text-align:left">Tally</td><td style="text-align:left">96%</td><td style="text-align:left">8%</td></tr><tr><td style="text-align:left">Hut</td><td style="text-align:left">76%</td><td style="text-align:left">25%</td></tr><tr><td style="text-align:left">Walk</td><td style="text-align:left">64%</td><td style="text-align:left">62%</td></tr></tbody></table></div>
+<p>What's left is the inside of the floor slabs, which is real terrain and should be dark. The Walk
+barely changed because it's a span with almost no scenery — nearly all of its painted content is
+thick decking. That was a useful check that the fix hadn't just switched the effect off.</p>
+<p>I fixed this at the wrong level twice before getting there, by adding <code>ignoreDepthDarkening</code> to
+individual materials. That does work, and it's why the bug went unnoticed for so long: every material
+the older rooms happened to use already had the flag set. The flags were covering up a bad mass map.</p>
+<h2 id="nothing-under-the-rooms">Nothing under the rooms</h2>
+<p>Treehouse rooms don't contribute backdrop mass. If they did, each one would grow a blurred copy of
+itself behind it, hanging in open sky. The downside is that there's nothing behind or below them, and
+east of the ground rooms there's no terrain under the structure at all. They looked like they were
+floating.</p>
+<p>I tried scattering a canopy asset under each room first. That didn't work, for three reasons:</p>
+<ul><li>A painted canvas is a fixed size, so it can't span the gap between the ground and a room at an<p>arbitrary height. It never reached the ground.</p></li><li>The canopy asset is drawn to hang from the top of the screen, so its top and sides are straight<p>cuts that are normally off-screen. In mid-air those cuts are the outline, so it looked like a
+flat-topped rectangle.</p></li><li>It's tuned as a dark ceiling, so it was far too dark for a tree crown.</li></ul>
+<p>So the canvas is generated per tree now. The trunk is however tall the gap needs, and the crown is a
+few overlapping ellipses with noise on the edges so nothing comes out straight. It's still a normal
+landmark canvas, which matters: that's what gives the bark and canopy fills the shape information
+they need. The bark fill shades across the trunk so it looks round, and the canopy fill darkens the
+underside and punches gaps through the leaves.</p>
+<p>Trunks come out at 19 tiles under the catchment and 130 under Vassen's quarters, from the same rule.</p>
+<p>Two more things I got wrong, both the same mistake as the first bug — fixing it one level too low:</p>
+<ul><li>I sized the canvas to the crown's intended top, so the canvas edge cut the noise off in a straight<p>line and the flat top came back.</p></li><li>I made &quot;is this already held up&quot; a per-column check instead of per-room, so a room sitting on the<p>one below still grew a tree under the part that overhung it.</p></li></ul>
+<h2 id="windows">Windows</h2>
+<p>One design change while I was in there. Vassen is blind, and there are no light sources anywhere in
+the treehouse. So windows are something a sighted person builds, and he built the place from the
+bottom up over ten thousand years.</p>
+<p>Windows now get rarer as you climb. The catchment has two. The larder has one, plus a blank panel
+where the second would go. The workshop is glazed at its old end and panelled blind at its new end.
+The tally and the quarters have none at all.</p>
+<h2 id="still-open">Still open</h2>
+<p>The support trees are set to about 3.2 crowns deep on the back layers. <span class="badge badge-proposed">PROPOSED</span> — I haven't
+baked it and looked at it yet. It's one number per rule. Too dense and the structure sits inside a
+solid mass of leaves; too sparse and it reads as separate trees propping it up.</p>
+<p>The vista from the post needs checking too. It pulls back far enough to see the forest floor and pans
+west, which takes Cain out of frame while he's standing there. That was on purpose, but I don't know
+yet whether it's annoying to actually play.</p>
+  </div>
+</article>
+<nav class="post-nav">
+  <a class="nav-prev" href="reading-the-forest.html"><span>Previous</span><strong>Reading the forest</strong></a>
+  <span></span>
+</nav>
+</main>
+<footer class="site-foot">
+  <p>Cain is in active development. Everything here is subject to change — that is rather the point.</p>
+</footer>
+</body>
+</html>

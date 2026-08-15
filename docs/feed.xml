@@ -6,6 +6,13 @@
   <description>Development log for Cain — a 2D action-platformer with deliberate, stamina-based combat and a hand-painted, organic world.</description>
   <language>en</language>
   <item>
+    <title>Filling in the treehouse</title>
+    <link>/posts/filling-in-the-treehouse.html</link>
+    <guid isPermaLink="false">cain-2026-08-15-filling-in-the-treehouse</guid>
+    <pubDate>Sat, 15 Aug 2026 12:00:00 GMT</pubDate>
+    <description>Five new treehouse rooms, and the two bake bugs that turned up once the interiors were properly filled in.</description>
+  </item>
+  <item>
     <title>Reading the forest</title>
     <link>/posts/reading-the-forest.html</link>
     <guid isPermaLink="false">cain-2026-08-02-reading-the-forest</guid>
