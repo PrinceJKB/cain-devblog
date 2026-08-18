@@ -9,9 +9,6 @@ package-lock.json
 Thumbs.db
 desktop.ini
 
-# Machine-specific Claude Code settings
-.claude/settings.local.json
-
 # NOTE: docs/ is intentionally NOT ignored.
 # GitHub Pages serves it straight from the repo, which is what keeps
 # publishing to a plain `git push` with no CI in the loop.

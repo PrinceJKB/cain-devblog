@@ -6,6 +6,13 @@
   <description>Development log for Cain — a 2D action-platformer with deliberate, stamina-based combat and a hand-painted, organic world.</description>
   <language>en</language>
   <item>
+    <title>The first rooms under the Wake</title>
+    <link>/posts/the-first-rooms-under-the-wake.html</link>
+    <guid isPermaLink="false">cain-2026-08-17-the-first-rooms-under-the-wake</guid>
+    <pubDate>Mon, 17 Aug 2026 12:00:00 GMT</pubDate>
+    <description>Two cave rooms went in. Between them they exposed a room-sizing mistake, a collider bug that had been there all along, and an erosion model that couldn't do the thing I wanted it to.</description>
+  </item>
+  <item>
     <title>Filling in the treehouse</title>
     <link>/posts/filling-in-the-treehouse.html</link>
     <guid isPermaLink="false">cain-2026-08-15-filling-in-the-treehouse</guid>
