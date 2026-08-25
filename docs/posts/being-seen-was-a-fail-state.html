@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Being seen was a fail state — Cain</title>
+<meta name="description" content="I gave Cain a way to make a noise somewhere he isn't. It did nothing, for four separate reasons, and the last one was that every enemy state in the game was about him.">
+<meta property="og:title" content="Being seen was a fail state — Cain">
+<meta property="og:description" content="I gave Cain a way to make a noise somewhere he isn't. It did nothing, for four separate reasons, and the last one was that every enemy state in the game was about him.">
+<meta property="og:type" content="website">
+<link rel="alternate" type="application/rss+xml" title="Cain devblog" href="../feed.xml">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body class="page-post">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <a class="brand" href="../index.html">
+    <span class="brand-mark">Cain</span>
+    <span class="brand-sub">Devblog</span>
+  </a>
+  <nav class="site-nav">
+    <a href="../index.html">Archive</a>
+    <a href="../feed.xml">RSS</a>
+  </nav>
+</header>
+<main id="main">
+<article class="post">
+  <header class="post-head">
+    <p class="crumb"><a href="../index.html">&larr; All entries</a></p>
+    <h1>Being seen was a fail state</h1>
+    <p class="post-meta">
+      <time datetime="2026-08-25">25 August 2026</time>
+      <span class="post-tags"><span class="tag tag-design">design</span></span>
+    </p>
+  </header>
+  <nav class="toc" aria-label="On this page">
+  <p class="toc-label">On this page</p>
+  <ol><li><a href="#the-ground-was-blocking-the-sound">The ground was blocking the sound</a></li><li><a href="#the-distraction-made-them-harder-to-sneak-past">The distraction made them harder to sneak past</a></li><li><a href="#the-payoff-was-explicitly-locked-out">The payoff was explicitly locked out</a></li><li><a href="#everything-in-the-game-was-about-cain">Everything in the game was about Cain</a></li><li><a href="#three-smaller-things">Three smaller things</a></li><li><a href="#still-open">Still open</a></li></ol>
+</nav>
+  <div class="prose">
+<p>Last entry ended on a gap: Cain could be quiet, but he couldn't lie. He had no way to make a noise
+somewhere he wasn't standing. So I built one — a world noise channel that anything can publish into,
+and a stone to throw. It travels 8 units, lands with a 9-unit noise, and does <strong>zero damage</strong>, which
+is deliberate: a distraction tool that also kills gets used as a weapon, and then the interesting
+question — fight this, or move it? — never gets asked.</p>
+<p>Then I threw it at a wretch and nothing happened. It walked over to the noise. That was all. I still
+had to walk up and start the same fight I would have started anyway.</p>
+<p>Four things turned out to be wrong, and they were four different layers of the same mistake.</p>
+<h2 id="the-ground-was-blocking-the-sound">The ground was blocking the sound</h2>
+<p>Hearing does a raycast from the listener's ear to the source, which was added a while back to stop
+wolves hearing Cain through the treehouse floorboards. That ray ran 0.1 units above the ground.</p>
+<p>A tile is <em>also</em> 0.1 units. The ray sat at exactly one tile height, so a single step of ordinary
+undulation between the listener and the noise silenced it completely. Distractions only worked on
+perfectly flat floor, which the Wake mostly isn't.</p>
+<p>It samples two heights now — 0.55 and 1.4 — and the sound gets through if either is clear. Real
+sound diffracts over small obstacles and only a real barrier stops it. A deck or a wall still blocks
+both rays, so the floorboards case that motivated the raycast in the first place still behaves.</p>
+<h2 id="the-distraction-made-them-harder-to-sneak-past">The distraction made them harder to sneak past</h2>
+<p>An enemy at Suspicious or above gets a 180° vision cone instead of its normal arc, because something
+actively looking for you should be hard to flank. Investigating a noise raised them to Suspicious.</p>
+<p>So throwing a stone granted the target omnidirectional vision. The tool for creating an opening was
+closing one.</p>
+<p>There's a distinction I hadn't made: being <em>curious</em> and being <em>wary</em> are not the same state. A
+creature that heard a clatter is focused on the clatter. A creature that heard <strong>you</strong> is hunting.
+Curiosity now keeps the normal vision cone; only genuine evidence of Cain widens it.</p>
+<h2 id="the-payoff-was-explicitly-locked-out">The payoff was explicitly locked out</h2>
+<pre class="code"><code>IsBackstabbable =&gt; _isAttacking || currentState == State.Stunned
+               || _alertLevel == AlertLevel.Unaware;</code></pre>
+<p>A distracted enemy is Suspicious. So the one reward that would have justified the whole sequence —
+walking up behind the thing while it stares at a rock — was refused by the very state the
+distraction creates. Curious enemies are backstabbable now. Wary ones still aren't.</p>
+<h2 id="everything-in-the-game-was-about-cain">Everything in the game was about Cain</h2>
+<p>The last one is the real one. Here were the enemy states:</p>
+<blockquote><p>Idle, Patrolling, Investigating, Chasing, Kiting, Attacking, Casting, Stunned, Vulnerable, Dead,
+Noticing</p></blockquote>
+<p>Investigating, Chasing, Kiting, Attacking, Casting and Noticing are all <em>about Cain</em>. Stunned,
+Vulnerable and Dead are things Cain did <em>to them</em>. That leaves standing still, and walking a line.</p>
+<p>There was no state in which a creature was doing something of its own. So every system I built fed
+into one pipe that ended at the player's face. Fire damaged them, so they aggroed. Noise moved them,
+so they investigated, found Cain, and aggroed. Different inputs, one output.</p>
+<p>The model was: <strong>see Cain, hunt Cain.</strong> Every creature in the world was a sentry posted against the
+player, and being seen was a fail state. That isn't the game — Cain is an intruder in someone else's
+space, not the thing they were all waiting for.</p>
+<p>So creatures have a temperament now:</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left"></th><th style="text-align:left"></th></tr></thead><tbody><tr><td style="text-align:left"><strong>Territorial</strong></td><td style="text-align:left">Notices him, watches him, turns hostile only when he comes inside its personal space. The Wake's default.</td></tr><tr><td style="text-align:left"><strong>Predatory</strong></td><td style="text-align:left">Hunts on sight.</td></tr><tr><td style="text-align:left"><strong>Skittish</strong></td><td style="text-align:left">Leaves.</td></tr><tr><td style="text-align:left"><strong>Indifferent</strong></td><td style="text-align:left">Doesn't care until something hurts it.</td></tr></tbody></table></div>
+<p>Only four things are Predatory: the marrow wolf, the blind wretch, the stump, and the brute. It's
+worth less the more it gets used — if everything hunts you, nothing is frightening.</p>
+<p>Territorial creatures got a new state, <code>Watching</code>, which is the first state in the game that isn't
+about attacking. They stand off and stare, drifting slightly around where they stopped while keeping
+their eyes on him, and escalate when he crosses 2.2 units. Back off and stay out of sight and they
+lose interest and go back to what they were doing.</p>
+<p>The drifting is there because they looked wrong standing still. Nothing alive holds a pose, and a
+frozen sprite reads as a bug rather than as menace.</p>
+<p>Sight ranges came down about 30% across the board at the same time, because being watched from a
+distance only works if the distance is real.</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left"></th><th style="text-align:left">before</th><th style="text-align:left">after</th></tr></thead><tbody><tr><td style="text-align:left">basic wretch</td><td style="text-align:left">2.40</td><td style="text-align:left">1.68</td></tr><tr><td style="text-align:left">brute</td><td style="text-align:left">2.27</td><td style="text-align:left">1.59</td></tr><tr><td style="text-align:left">stump</td><td style="text-align:left">2.50</td><td style="text-align:left">1.75</td></tr><tr><td style="text-align:left">husk</td><td style="text-align:left">3.00</td><td style="text-align:left">2.10</td></tr><tr><td style="text-align:left">forest wretch</td><td style="text-align:left">3.20</td><td style="text-align:left">2.24</td></tr><tr><td style="text-align:left">marrow wolf</td><td style="text-align:left">3.20</td><td style="text-align:left">2.24</td></tr><tr><td style="text-align:left">lasher</td><td style="text-align:left">3.60</td><td style="text-align:left">2.52</td></tr><tr><td style="text-align:left">shooter</td><td style="text-align:left">4.84</td><td style="text-align:left">3.39</td></tr></tbody></table></div>
+<h2 id="three-smaller-things">Three smaller things</h2>
+<p><strong>Burning things run.</strong> Anything on fire breaks off whatever it was doing and panics until it's out.
+Nothing fights while burning to death — and because it's still alight while it runs, it carries the
+fire with it. It also screams, through the same noise channel, so its packmates converge on <em>it</em>
+rather than on Cain.</p>
+<p><strong>The first enemy in the game was deaf.</strong> The husk's profile had <code>hearingMultiplier: 0</code>. It's the
+first thing a player meets, in Nod, and no thrown object would ever have worked on it — which makes
+the region's entire sound vocabulary unteachable at exactly the point you'd want to teach it. It has
+ears now (0.8, still dull).</p>
+<p><strong>A poise break was spending its own reward.</strong> The combo auto-cancelled into the riposte the instant
+an enemy became vulnerable, with no input at all. The swing that earned the opening also took it,
+before you'd registered that it happened. It ends the combo now and clears buffered input, and you
+press again if you want it. A punish you don't choose is an animation, not a punish.</p>
+<h2 id="still-open">Still open</h2>
+<p><span class="badge badge-proposed">PROPOSED</span> — the fire system got rebuilt underneath all of this and it's a whole entry of its own,
+so it isn't in here. Short version: authoring a burnable prop is one bool and one slider, and
+everything else — burn duration, spread reach and pace, noise, light, damage — derives from the
+object's size.</p>
+<p><span class="badge badge-open">OPEN</span> — none of this has been shown to produce a <em>moment</em>. Distraction works now in the sense
+that all four bugs are gone, but the room I've been testing in is flat ground with one enemy and
+nothing behind it. That room asks no question, so there's no answer the toolkit can give that isn't
+&quot;walk up and swing&quot;. Moving an enemy is only worth doing if it buys you something, and there's
+nothing in that room worth buying.</p>
+<p>I think that's the next thing, and it isn't more systems. It's one room with a stated job.</p>
+<p><span class="badge badge-open">OPEN</span> — the cave-corner question from last entry is still open, and I didn't fix it. The
+two-height sample handles ground undulation, not walls, so chambers underground are still
+acoustically sealed. That may well be wrong for caves specifically. I still don't think I can judge
+it from a description.</p>
+  </div>
+</article>
+<nav class="post-nav">
+  <a class="nav-prev" href="the-first-rooms-under-the-wake.html"><span>Previous</span><strong>The first rooms under the Wake</strong></a>
+  <span></span>
+</nav>
+</main>
+<footer class="site-foot">
+  <p>Cain is in active development. Everything here is subject to change — that is rather the point.</p>
+</footer>
+</body>
+</html>

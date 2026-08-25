@@ -6,6 +6,13 @@
   <description>Development log for Cain — a 2D action-platformer with deliberate, stamina-based combat and a hand-painted, organic world.</description>
   <language>en</language>
   <item>
+    <title>Being seen was a fail state</title>
+    <link>/posts/being-seen-was-a-fail-state.html</link>
+    <guid isPermaLink="false">cain-2026-08-25-being-seen-was-a-fail-state</guid>
+    <pubDate>Tue, 25 Aug 2026 12:00:00 GMT</pubDate>
+    <description>I gave Cain a way to make a noise somewhere he isn't. It did nothing, for four separate reasons, and the last one was that every enemy state in the game was about him.</description>
+  </item>
+  <item>
     <title>The first rooms under the Wake</title>
     <link>/posts/the-first-rooms-under-the-wake.html</link>
     <guid isPermaLink="false">cain-2026-08-17-the-first-rooms-under-the-wake</guid>
